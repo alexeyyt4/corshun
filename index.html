@@ -1,0 +1,247 @@
+<!DOCTYPE html><html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Личное дело: Коршун</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  /* Общие */
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; overflow-x: hidden; background: #f0f8ff; color: #320042; font-family: 'Georgia', serif; }
+  /* Шапка */
+  header#header {
+    position: relative;
+    width: 100%;
+    height: 150px;
+    background-image: url('https://scp-wiki.wdfiles.com/local--files/theme%3Amcd/body_bg_MCD2.png');
+    background-repeat: repeat-x;
+    background-position: top center;
+  }
+  header#header img#header-logo {
+    position: absolute;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 120px;
+  }
+
+  /* Макет */
+  #container {
+    display: flex;
+    flex-direction: row;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  #side-bar {
+    flex: 0 0 250px;
+    background: #f4e8ff;
+    padding: 1em;
+    border-right: 2px solid #6c006c;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+  }
+  #side-bar h3 { margin-top: 0; color: #6c006c; }
+  #side-bar ul { list-style: none; padding: 0; margin: 0; }
+  #side-bar ul li { margin: 0.5em 0; }
+  #side-bar ul li a { color: #320042; text-decoration: none; }
+
+  #page-content {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: 2em;
+  }
+  h1, h2 { color: #320042; }
+
+  .section {
+    background: #fff0ff;
+    border: 2px solid #6c006c;
+    padding: 1em;
+    margin-bottom: 1em;
+    box-shadow: 3px 3px 6px rgba(108,0,108,0.5);
+  }
+
+  /* Вкладки */
+  .tabs { margin-top: 1em; }
+  .tab-buttons { margin-bottom: 1em; }
+  .tab-buttons button {
+    background: #320042;
+    color: #fff;
+    border: none;
+    padding: 0.5em 1em;
+    cursor: pointer;
+    margin-right: 0.5em;
+    border-radius: 4px;
+  }
+  .tab-buttons button.active {
+    box-shadow: 0 0 5px rgba(50,0,50,0.5);
+  }
+  .tab-content {
+    display: none;
+    padding: 1em;
+    border: 2px solid #6c006c;
+    background: #fff0ff;
+  }
+  .tab-content.active { display: block; }
+
+  /* Коллапс */
+  .collapsible {
+    background: #dcbff0;
+    border: 1px solid #6c006c;
+    padding: 0.5em;
+    cursor: pointer;
+    margin-top: 1em;
+    border-radius: 4px;
+  }
+  .content {
+    display: none;
+    margin-top: 0.5em;
+    border: 1px solid #6c006c;
+    padding: 1em;
+    background: #fff0ff;
+  }
+
+  /* Кнопка музыки */
+  #music-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #6c006c;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    cursor: pointer;
+    border: none;
+    z-index: 1000;
+    animation: glow 1.5s infinite;
+    transition: transform 0.2s ease;
+  }
+  #music-button:hover { transform: scale(1.1); }
+  @keyframes glow {
+    0% { box-shadow: 0 0 5px rgba(108,0,108,0.5); }
+    50% { box-shadow: 0 0 20px rgba(108,0,108,0.8); }
+    100% { box-shadow: 0 0 5px rgba(108,0,108,0.5); }
+  }
+  #bg-music { display: none; }
+
+  @media (max-width: 767px) {
+    #container {
+      flex-direction: column;
+    }
+    #side-bar {
+      width: 100%;
+      flex: 0 0 auto;
+      border-right: none;
+      border-bottom: 2px solid #6c006c;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    #page-content {
+      width: 100%;
+      padding: 1em;
+    }
+  }
+</style>
+
+<script>
+  function toggleCollapse(id) {
+    var el = document.getElementById(id);
+    el.style.display = el.style.display === 'block' ? 'none' : 'block';
+  }
+  function openTab(evt, tabId) {
+    var contents = document.getElementsByClassName('tab-content'),
+        links = document.getElementsByClassName('tab-link');
+    for (var i = 0; i < contents.length; i++) contents[i].classList.remove('active');
+    for (var i = 0; i < links.length; i++) links[i].classList.remove('active');
+    document.getElementById(tabId).classList.add('active');
+    evt.currentTarget.classList.add('active');
+  }
+  function toggleMusic() {
+    var audio = document.getElementById('bg-music'),
+        icon = document.getElementById('music-icon');
+    if (audio.paused) { audio.play(); icon.textContent = '🔇'; }
+    else { audio.pause(); icon.textContent = '🔊'; }
+  }
+</script>
+</head>
+<body>
+<header id="header">
+  <img id="header-logo" src="https://scp-wiki.wdfiles.com/local--files/theme%3Ablack-market/MCDLogo2-small.png" alt="MC&D Logo">
+</header>
+<button id="music-button" onclick="toggleMusic()"><span id="music-icon">🔊</span></button>
+<audio id="bg-music" src="music.mp3" loop></audio>
+<div id="container">
+  <div id="side-bar">
+    <h3>Навигация</h3>
+    <ul>
+      <li><a href="https://scpfoundation.net/marshall-carter-and-dark-hub">Главная</a></li>
+      <li><a href="cases_hub.html">Личные дела</a></li>
+      <li><a href="#">Операции</a></li>
+    </ul>
+  </div>
+  <div id="page-content">
+    <h1>Личное дело: "Никто"</h1>
+    <div class="tabs">
+      <div class="tab-buttons">
+        <button class="tab-link active" onclick="openTab(event,'tab1')">Основная информация</button>
+        <button class="tab-link" onclick="openTab(event,'tab2')">Психологический профиль</button>
+        <button class="tab-link" onclick="openTab(event,'tab3')">Прошлые места службы</button>
+      </div>
+      <div id="tab1" class="tab-content active">
+        <div class="section">
+          <h2>Основные данные</h2>
+          <p><strong>Имя:</strong> Алексей Коршун</p>
+          <p><strong>Позывной:</strong> Никто</p>
+          <p><strong>Дата рождения:</strong> 23.12.1989</p>
+          <p><strong>Рост:</strong> 182 см</p>
+          <p><strong>Вес:</strong> 74 кг</p>
+          <p><strong>Цвет глаз:</strong> Серый</p>
+          <p><strong>Цвет волос:</strong> Зеленый</p>
+          <p><strong>Образование:</strong> Специалист по кибербезопасности и радиотехнике, Военный факультет БГУИР</p>
+        </div>
+        <div class="section">
+          <h2>Принадлежность</h2>
+          <p>Содружество "Кочевники", батальон "Астрал"</p>
+        </div>
+        <div class="section">
+          <h2>Должность</h2>
+          <ul>
+            <li>Агент внедрения</li>
+            <li>Тех.специалист особого уровня батальона "Астрал"</li>
+          </ul>
+        </div>
+        <div class="section">
+          <h2>Выписка с места службы</h2>
+          <p>"Служил в 'Тени'. Работал за границей — Сирия, Украина, Африка. Без провалов. Связи, агентура, кибератаки. Свой в доску. Молчаливый, но дело делает. На него можно положиться." - ГШ КГБ РБ, 2019 год</p>
+        </div>
+      </div>
+      <div id="tab2" class="tab-content">
+        <div class="section">
+          <h2>Психологический профиль</h2>
+          <p>Коршун проявляет хладнокровие, расчетливость и высокую адаптивность. Склонность к стратегическому мышлению.</p>
+        </div>
+        <div class="section">
+          <div class="collapsible" onclick="toggleCollapse('extra-info')">+ Дополнительные сведения</div>
+          <div id="extra-info" class="content">
+            <ul>
+              <li>Ранее был опертивником спецслужб разведки Беларуси</li>
+              <li>Участвовал в операции ████ на территории ██████</li>
+              <li>Имеет контракт на автономные действия в рамках "Кочевников"</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div id="tab3" class="tab-content">
+        <div class="section">
+          <h2>Прошлые места службы</h2>
+          <p><strong>2011–2020</strong> — Служба в КГБ Беларуси</p>
+          <p><strong>2020–н.в.</strong> — Завербован Кочевниками</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
